@@ -33,7 +33,7 @@ const formatRub = (value: number) => (
 
 const inputChips = [100, 200, 300];
 
-export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, setAnswerData }: AnswerScreenProps) => {
+export const AnswerScreen = ({ question, answer, onBack, setAnswerData }: AnswerScreenProps) => {
   const [sum, setSum] = useState(inputChips[0]);
   const [error, setError] = useState('');
   const selectedCoeff = answer === 'yes' ? question.yesX : question.noX;
