@@ -102,9 +102,9 @@ const coeffText = style({
 const eventRow = style({
   display: 'flex',
   gap: '10px',
-  alignItems: 'flex-start',
+  alignItems: 'center',
+  justifyContent: 'space-between',
 });
-
 const eventText = style({
   flex: 1,
   color: 'rgba(6, 7, 12, 0.62)',

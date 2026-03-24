@@ -1,10 +1,14 @@
+import { AmountInput } from '@alfalab/core-components/amount-input/cssm';
+
 import { Button } from '@alfalab/core-components/button/cssm';
+import { Gap } from '@alfalab/core-components/gap/cssm';
+import { Tag } from '@alfalab/core-components/tag/cssm';
 import { Typography } from '@alfalab/core-components/typography/cssm';
 import { ChevronLeftMIcon } from '@alfalab/icons-glyph/ChevronLeftMIcon';
 import { StarMIcon } from '@alfalab/icons-glyph/StarMIcon';
 import { UsersMIcon } from '@alfalab/icons-glyph/UsersMIcon';
-import { type ComponentType } from 'react';
-import { QuestionGauge } from '../components/QuestionGauge';
+import { useState, type ComponentType } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { appSt } from '../style.css';
 import type { QuestionItem } from '../types';
 import { getAnswerTone } from '../utils/tone';
@@ -27,11 +31,21 @@ const formatRub = (value: number) => (
   </>
 );
 
+const inputChips = [100, 200, 300];
+
 export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, setAnswerData }: AnswerScreenProps) => {
-  const stake = 100;
+  const [sum, setSum] = useState(inputChips[0]);
+  const [error, setError] = useState('');
   const selectedCoeff = answer === 'yes' ? question.yesX : question.noX;
-  const commission = Math.round(stake * 0.02);
-  const winAmount = Math.round(stake * selectedCoeff);
+  const commission = Math.round(sum * 0.02);
+  const winAmount = Math.round(sum * selectedCoeff);
+
+  const handleChangeInput = (_: React.ChangeEvent<HTMLInputElement> | null, { value }: { value: number | null }) => {
+    if (error) {
+      setError('');
+    }
+    setSum(value ?? 0);
+  };
 
   return (
     <div className={appSt.page}>
@@ -119,28 +133,49 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
             </div>
           </section>
 
-          <section className={answerSt.sectionCard}>
-            <Typography.Text
-              tag="p"
-              view="primary-medium"
-              defaultMargins={false}
-              weight="bold"
-              className={answerSt.sectionTitle}
-            >
-              О событии
-            </Typography.Text>
+          <img src={answer === 'yes' ? question.graphData.imgYes : question.graphData.imgNo} />
 
+          <section className={answerSt.sectionCard}>
             <div className={answerSt.eventRow}>
-              <Typography.Text tag="p" view="primary-medium" defaultMargins={false} className={answerSt.eventText}>
-                {question.description}
+              <Typography.Text
+                tag="p"
+                view="primary-medium"
+                defaultMargins={false}
+                weight="bold"
+                className={answerSt.sectionTitle}
+              >
+                О событии
               </Typography.Text>
-              <QuestionGauge
-                id={`answer-gauge-${question.question}`}
-                percentage={question.graphData.percentage}
-                type={question.graphData.type}
-                GaugeChartComponent={GaugeChartComponent}
-              />
             </div>
+
+            <Typography.Text tag="p" view="primary-medium" defaultMargins={false} className={answerSt.eventText}>
+              {question.description}
+            </Typography.Text>
+          </section>
+
+          <section className={answerSt.sectionCard}>
+            <AmountInput
+              label="Размер ставки"
+              labelView="outer"
+              value={sum}
+              error={error}
+              onChange={handleChangeInput}
+              block
+              minority={1}
+              bold={false}
+              min={inputChips[0]}
+              suffix="₽ кэшбека"
+            />
+
+            <Swiper slidesPerView="auto" spaceBetween={8} style={{ marginTop: '.5rem' }}>
+              {inputChips.map(category => (
+                <SwiperSlide key={category} className={appSt.filterSlide}>
+                  <Tag size="xxs" view="filled" shape="rectangular" onClick={() => setSum(category)}>
+                    {category} ₽ кэшбека
+                  </Tag>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </section>
 
           <section className={answerSt.sectionCard}>
@@ -160,7 +195,7 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
                   Ставка
                 </Typography.Text>
                 <Typography.Text tag="span" view="primary-medium" className={answerSt.calcValue}>
-                  {formatRub(stake)}
+                  {formatRub(sum)}
                 </Typography.Text>
               </div>
 
@@ -187,7 +222,7 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
                   ⚠ Если ошибётесь
                 </Typography.Text>
                 <Typography.Text tag="span" view="primary-medium" className={answerSt.calcValue}>
-                  − {formatRub(stake)}
+                  − {formatRub(sum)}
                 </Typography.Text>
               </div>
             </div>
@@ -206,7 +241,7 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
               >
                 <b>{winAmount.toLocaleString('ru-RU')}</b>{' '}
                 <Typography.TitleMobile
-                  tag="h5"
+                  tag="div"
                   view="xsmall"
                   font="system"
                   color="secondary"
@@ -219,8 +254,8 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
             </div>
           </section>
         </div>
+        <Gap size={48} />
       </section>
-
       <div className={answerSt.bottomBar}>
         <button type="button" className={answerSt.backButton} onClick={onBack}>
           <ChevronLeftMIcon className={answerSt.backIcon} />
@@ -232,7 +267,7 @@ export const AnswerScreen = ({ question, answer, GaugeChartComponent, onBack, se
           view="primary"
           hint={
             <Typography.Text tag="span" view="secondary-large" color="primary-inverted">
-              {stake.toLocaleString('ru-RU')} ₽ кешбэка
+              {sum.toLocaleString('ru-RU')} ₽ кешбэка
             </Typography.Text>
           }
         >

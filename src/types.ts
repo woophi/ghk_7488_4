@@ -10,7 +10,8 @@ export type QuestionItem = {
   graphData: {
     percentage: number;
     type: 'yes' | 'no';
-    img: string;
+    imgYes: string;
+    imgNo: string;
   };
 };
 
