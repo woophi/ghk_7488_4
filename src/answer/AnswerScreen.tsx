@@ -47,6 +47,12 @@ export const AnswerScreen = ({ question, answer, onBack, setAnswerData }: Answer
     setSum(value ?? 0);
   };
 
+  const submit = () => {
+    window.location.replace(
+      'alfabank://sdui_screen?screenName=InvestmentLongread&fromCurrent=true&shouldUseBottomSafeArea=true&endpoint=v1/invest-main-screen-view/investment-longread/98955%3flocation=AM%26campaignCode=GH',
+    );
+  };
+
   return (
     <div className={appSt.page}>
       <div className={appSt.hero}>
@@ -261,6 +267,7 @@ export const AnswerScreen = ({ question, answer, onBack, setAnswerData }: Answer
           <ChevronLeftMIcon className={answerSt.backIcon} />
         </button>
         <Button
+          onClick={submit}
           type="button"
           block
           className={answerSt.actionButton}
