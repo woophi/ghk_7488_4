@@ -7,7 +7,7 @@ import { Typography } from '@alfalab/core-components/typography/cssm';
 import { ChevronLeftMIcon } from '@alfalab/icons-glyph/ChevronLeftMIcon';
 import { StarMIcon } from '@alfalab/icons-glyph/StarMIcon';
 import { UsersMIcon } from '@alfalab/icons-glyph/UsersMIcon';
-import { useState, type ComponentType } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { appSt } from '../style.css';
 import type { QuestionItem } from '../types';
@@ -40,6 +40,10 @@ export const AnswerScreen = ({ question, answer, onBack, setAnswerData }: Answer
   const commission = Math.round(sum * 0.02);
   const winAmount = Math.round(sum * selectedCoeff);
 
+  useEffect(() => {
+    window.gtag('event', '7488_event_impression', { var: 'var4', question: question.question });
+  }, []);
+
   const handleChangeInput = (_: React.ChangeEvent<HTMLInputElement> | null, { value }: { value: number | null }) => {
     if (error) {
       setError('');
@@ -48,6 +52,7 @@ export const AnswerScreen = ({ question, answer, onBack, setAnswerData }: Answer
   };
 
   const submit = () => {
+    window.gtag('event', '7488_bet_click', { var: 'var4', question: question.question, answer, bet_size: String(sum) });
     window.location.replace(
       'alfabank://sdui_screen?screenName=InvestmentLongread&fromCurrent=true&shouldUseBottomSafeArea=true&endpoint=v1/invest-main-screen-view/investment-longread/98955%3flocation=AM%26campaignCode=GH',
     );
