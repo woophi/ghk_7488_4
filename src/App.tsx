@@ -200,10 +200,10 @@ export const App = () => {
     <div className={appSt.page}>
       <div className={appSt.hero}>
         <Typography.Text tag="div" className={appSt.heroTitle}>
-          Используй свой кэшбэк
+          Используй свой кешбэк
         </Typography.Text>
         <Typography.Text tag="p" view="primary-medium" defaultMargins={false} className={appSt.heroText}>
-          Ставь кэшбек на реальные события. Угадал — получаешь больше баллов.
+          Ставь кешбэк на реальные события. Угадал — получаешь больше баллов.
         </Typography.Text>
       </div>
 
